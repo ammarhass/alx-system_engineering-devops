@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Configure your Nginx server so that /redirect_me is redirecting to another page
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install nginx -y
+sudo ufw allow 'Nginx HTTP'
+echo "Hello World!" > /var/www/html/index.html
+server_con= "server {
+			listen 80;
+			listen [::]:80;
+			root //var/www/html;
+			index index.html index.htm;
+			server_name _;
+			location / {
+				try_files $uri $uri/ i=404;
+			}
+			if (\$request_filename ~ redirect_me){
+            			rewrite ^ https://github.com/ permanent;
+        		}
+		}"
+sudo service nginx restart
